@@ -1,0 +1,38 @@
+Transitive Authorization
+
+Depends on the "authorization" plugin from:
+
+  http://github.com/DocSavage/rails-authorization-plugin/tree/master
+
+Allows you to declare relationships between models, to have roles
+applied to one model also apply to other models, without having to
+explicitly create those roles:
+
+  class User < ActiveRecord::Base
+    acts_as_authorizable_user
+    acts_as_authorizable
+  end
+
+  class Client < ActiveRecord::Base
+    acts_as_authorizable
+    has_many :accounts
+    authorizes :accounts
+  end
+
+  class Account < ActiveRecord::Base
+    acts_as_authorizable
+    belongs_to :client
+    authorized_by :client
+  end
+
+  user1.has_role('salesman', client1)
+
+  user1.is_salesman_for? client1  # true
+  user1.is_salesman_for? account1 # also true
+
+To do:
+
+ * Per-role relationships
+
+
+
